@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Bike = __webpack_require__(/*! ./models/bikes.js */ \"./src/models/bikes.js\")\nconst Charger = __webpack_require__(/*! ./models/chargers.js */ \"./src/models/chargers.js\")\nconst AllBikesView = __webpack_require__(/*! ./views/all_bikes_view.js */ \"./src/views/all_bikes_view.js\")\nconst SelectView = __webpack_require__(/*! ./views/select_view.js */ \"./src/views/select_view.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('JS loaded')\n\n  const selectElement = document.querySelector('#bike-dropdown');\n  const selectView = new SelectView(selectElement);\n  selectView.bindEvents();\n\n  const listContainer = document.querySelector('#list-bikes')\n  const allBikes = new AllBikesView(listContainer);\n  allBikes.bindEvents();\n\n  const bike = new Bike();\n  bike.getData();\n  bike.bindEvents();\n\n  const charger = new Charger();\n  charger.getData();\n})\n\n\n//# sourceURL=webpack:///./src/app.js?");
+eval("const Bike = __webpack_require__(/*! ./models/bikes.js */ \"./src/models/bikes.js\")\nconst Charger = __webpack_require__(/*! ./models/chargers.js */ \"./src/models/chargers.js\")\nconst AllBikesView = __webpack_require__(/*! ./views/all_bikes_view.js */ \"./src/views/all_bikes_view.js\")\nconst AllChargersView = __webpack_require__(/*! ./views/all_chargers_view.js */ \"./src/views/all_chargers_view.js\")\nconst SelectView = __webpack_require__(/*! ./views/select_view.js */ \"./src/views/select_view.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('JS loaded')\n\n  const selectElement = document.querySelector('#bike-dropdown');\n  const selectView = new SelectView(selectElement);\n  selectView.bindEvents();\n\n  const listContainer = document.querySelector('#list-bikes')\n  const allBikes = new AllBikesView(listContainer);\n  allBikes.bindEvents();\n\n  const ChargerListContainer = document.querySelector('#list-chargers')\n  const allChargers = new AllChargersView(ChargerListContainer);\n  allChargers.bindEvents();\n\n  const bike = new Bike();\n  bike.getData();\n  bike.bindEvents();\n\n  const charger = new Charger();\n  charger.getData();\n  \n})\n\n\n//# sourceURL=webpack:///./src/app.js?");
 
 /***/ }),
 
@@ -152,6 +152,17 @@ eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/he
 
 /***/ }),
 
+/***/ "./src/views/all_chargers_view.js":
+/*!****************************************!*\
+  !*** ./src/views/all_chargers_view.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\")\nconst Request = __webpack_require__(/*! ../helpers/request.js */ \"./src/helpers/request.js\")\nconst ChargerDetailsView = __webpack_require__(/*! ../views/chargers_details_view.js */ \"./src/views/chargers_details_view.js\")\n\nconst AllChargersView = function(container) {\n  this.container = container;\n  this.chargers = [];\n}\n\nAllChargersView.prototype.bindEvents = function(){\n  PubSub.subscribe('Charger:chargers-loaded', (event) => {\n    this.chargers = event.detail;\n    console.log(this.chargers);\n    this.render();\n  })\n}\n\nAllChargersView.prototype.render = function(){\n  this.chargers.forEach(charger => {\n    const chargerDetailsView = new ChargerDetailsView(this.container, charger);\n    chargerDetailsView.render();\n    // console.log(bike)\n  })\n}\n\nmodule.exports = AllChargersView;\n\n\n//# sourceURL=webpack:///./src/views/all_chargers_view.js?");
+
+/***/ }),
+
 /***/ "./src/views/bikes_details_view.js":
 /*!*****************************************!*\
   !*** ./src/views/bikes_details_view.js ***!
@@ -160,6 +171,17 @@ eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/he
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\n\nconst BikeDetailsView = function(bikeListContainer, bike){\n  this.bikeListContainer = bikeListContainer;\n  this.bike = bike;\n}\n\nBikeDetailsView.prototype.render =function(){\n  const bikeDetails = document.createElement('div');\n  const bikeLocation = this.createHeading();\n  bikeDetails.appendChild(bikeLocation);\n  this.bikeListContainer.appendChild(bikeDetails);\n  const bikeUl = this.createBikeUl();\n  this.bikeListContainer.appendChild(bikeUl);\n}\n\nBikeDetailsView.prototype.createHeading = function(){\n  const nameHeading = document.createElement('p');\n  nameHeading.textContent = this.bike.commonName;\n  return nameHeading;\n}\n\nBikeDetailsView.prototype.createBikeUl = function() {\n  const bikeDetailsUl = document.createElement('ul');\n  this.populateUl(bikeDetailsUl);\n  return bikeDetailsUl;\n}\n\nBikeDetailsView.prototype.populateUl = function(ul) {\n  const randomLi = document.createElement('li');\n  randomLi.textContent = this.bike.id;\n  ul.appendChild(randomLi);\n}\n\nmodule.exports = BikeDetailsView;\n\n\n//# sourceURL=webpack:///./src/views/bikes_details_view.js?");
+
+/***/ }),
+
+/***/ "./src/views/chargers_details_view.js":
+/*!********************************************!*\
+  !*** ./src/views/chargers_details_view.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\n\nconst ChargerDetailsView = function(chargerListContainer, charger){\n  this.chargerListContainer = chargerListContainer;\n  this.charger = charger;\n}\n\nChargerDetailsView.prototype.render =function(){\n  const chargerDetails = document.createElement('div');\n  const chargerLocation = this.createHeading();\n  chargerDetails.appendChild(chargerLocation);\n  this.chargerListContainer.appendChild(chargerDetails);\n  const chargerUl = this.createChargerUl();\n  this.chargerListContainer.appendChild(chargerUl);\n}\n\nChargerDetailsView.prototype.createHeading = function(){\n  const nameHeading = document.createElement('p');\n  nameHeading.textContent = this.charger.commonName;\n  return nameHeading;\n}\n\nChargerDetailsView.prototype.createChargerUl = function() {\n  const chargerDetailsUl = document.createElement('ul');\n  this.populateUl(chargerDetailsUl);\n  return chargerDetailsUl;\n}\n\nChargerDetailsView.prototype.populateUl = function(ul) {\n  const randomLi = document.createElement('li');\n  randomLi.textContent = this.charger.id;\n  ul.appendChild(randomLi);\n}\n\nmodule.exports = ChargerDetailsView;\n\n\n//# sourceURL=webpack:///./src/views/chargers_details_view.js?");
 
 /***/ }),
 
