@@ -1,4 +1,5 @@
 const Bike = require('./models/bikes.js')
+const Charger = require('./models/chargers.js')
 const AllBikesView = require('./views/all_bikes_view.js')
 const SelectView = require('./views/select_view.js');
 
@@ -17,4 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   bike.getData();
   bike.bindEvents();
 
+  const charger = new Charger();
+  charger.getData();
 })

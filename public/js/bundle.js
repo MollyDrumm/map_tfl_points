@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Bike = __webpack_require__(/*! ./models/bikes.js */ \"./src/models/bikes.js\")\nconst AllBikesView = __webpack_require__(/*! ./views/all_bikes_view.js */ \"./src/views/all_bikes_view.js\")\nconst SelectView = __webpack_require__(/*! ./views/select_view.js */ \"./src/views/select_view.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('JS loaded')\n\n  const selectElement = document.querySelector('#bike-dropdown');\n  const selectView = new SelectView(selectElement);\n  selectView.bindEvents();\n\n  const listContainer = document.querySelector('#list-bikes')\n  const allBikes = new AllBikesView(listContainer);\n  allBikes.bindEvents();\n\n  const bike = new Bike();\n  bike.getData();\n  bike.bindEvents();\n\n})\n\n\n//# sourceURL=webpack:///./src/app.js?");
+eval("const Bike = __webpack_require__(/*! ./models/bikes.js */ \"./src/models/bikes.js\")\nconst Charger = __webpack_require__(/*! ./models/chargers.js */ \"./src/models/chargers.js\")\nconst AllBikesView = __webpack_require__(/*! ./views/all_bikes_view.js */ \"./src/views/all_bikes_view.js\")\nconst SelectView = __webpack_require__(/*! ./views/select_view.js */ \"./src/views/select_view.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('JS loaded')\n\n  const selectElement = document.querySelector('#bike-dropdown');\n  const selectView = new SelectView(selectElement);\n  selectView.bindEvents();\n\n  const listContainer = document.querySelector('#list-bikes')\n  const allBikes = new AllBikesView(listContainer);\n  allBikes.bindEvents();\n\n  const bike = new Bike();\n  bike.getData();\n  bike.bindEvents();\n\n  const charger = new Charger();\n  charger.getData();\n})\n\n\n//# sourceURL=webpack:///./src/app.js?");
 
 /***/ }),
 
@@ -127,6 +127,17 @@ eval("const Request = function(url) {\n  this.url = url;\n}\n\n\nRequest.prototy
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\")\nconst Request = __webpack_require__(/*! ../helpers/request.js */ \"./src/helpers/request.js\")\n\nconst Bike = function(){\nthis.bikes = null;\nthis.bikesData=null;\n}\n\nBike.prototype.getData = function() {\n  const request = new Request('https://api.tfl.gov.uk/bikepoint');\n  request.get((data) => {\n    this.bikes = data;\n    PubSub.publish('Bike:bikes-loaded', this.bikes);\n    console.log(this.bikes)\n  })\n}\n\nBike.prototype.bindEvents = function(){\n  PubSub.subscribe('SelectView:change', (evt)  => {\n  const bikeIndex = evt.detail;\n  this.publishBikebyLocation(bikeIndex);\n})\n}\n\nBike.prototype.bikesByLocation = function(bikeIndex) {\n  const selectedBike = this.bikes[bikeIndex];\n  return this.bikes.map((selectedBike) => {\n    return selectedBike.commonName;\n  });\n};\n\nBike.prototype.publishBikebyLocation =function(bike){\n  const bikeSelected = this.bikesByLocation(bike);\n  PubSub.publish('Bikes:bike-selected-ready', bikeSelected);\n  console.log(bikeSelected);\n}\n\nmodule.exports = Bike;\n\n\n//# sourceURL=webpack:///./src/models/bikes.js?");
+
+/***/ }),
+
+/***/ "./src/models/chargers.js":
+/*!********************************!*\
+  !*** ./src/models/chargers.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\")\nconst Request = __webpack_require__(/*! ../helpers/request.js */ \"./src/helpers/request.js\")\n\nconst Charger = function(){\nthis.chargers = null;\nthis.chargersData = null;\n}\n\nCharger.prototype.getData = function() {\n  const request = new Request('https://api.tfl.gov.uk/Place/Type/ChargeStation,ChargeConnector');\n  request.get((data) => {\n    this.chargers = data;\n    PubSub.publish('Charger:chargers-loaded', this.chargers);\n    console.log(this.chargers)\n  })\n}\nmodule.exports = Charger;\n\n\n//# sourceURL=webpack:///./src/models/chargers.js?");
 
 /***/ }),
 
